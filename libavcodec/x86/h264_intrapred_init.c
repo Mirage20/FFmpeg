@@ -328,7 +328,6 @@ av_cold void ff_h264_pred_init_x86(H264PredContext *h, int codec_id,
 
         if(EXTERNAL_AVX2(cpu_flags)){
             if (codec_id == AV_CODEC_ID_VP8) {
-                printf("%d looooooooooooooool AVXXXXXXX\n",codec_id);
                 h->pred16x16[PLANE_PRED8x8    ] = ff_pred16x16_tm_vp8_8_avx2;
             }
         }
