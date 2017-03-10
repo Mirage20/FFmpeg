@@ -304,9 +304,9 @@ cglobal pred16x16_tm_vp8_8, 2,9,5
     vpackuswb       ymm3, ymm3, ymm3
     vpackuswb       ymm4, ymm4, ymm4
     vpermq          ymm1, ymm1, 216
-    vpermq 		    ymm2, ymm2, 216
-    vpermq 		    ymm3, ymm3, 216
-    vpermq 		    ymm4, ymm4, 216
+    vpermq 	        ymm2, ymm2, 216
+    vpermq 	        ymm3, ymm3, 216
+    vpermq 	        ymm4, ymm4, 216
     movdqa          [r0+r1*1], xmm1
     movdqa          [r0+r1*2], xmm2
     movdqa          [r2+r1*1], xmm3
