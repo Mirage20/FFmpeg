@@ -127,6 +127,7 @@ PRED16x16(plane_svq3, 8, ssse3)
 PRED16x16(tm_vp8, 8, mmx)
 PRED16x16(tm_vp8, 8, mmxext)
 PRED16x16(tm_vp8, 8, sse2)
+PRED16x16(tm_vp8, 8, avx2)
 
 PRED8x8(top_dc, 8, mmxext)
 PRED8x8(dc_rv40, 8, mmxext)
@@ -188,6 +189,7 @@ av_cold void ff_h264_pred_init_x86(H264PredContext *h, int codec_id,
     int cpu_flags = av_get_cpu_flags();
 
     if (bit_depth == 8) {
+
         if (EXTERNAL_MMX(cpu_flags)) {
             h->pred16x16[VERT_PRED8x8         ] = ff_pred16x16_vertical_8_mmx;
             h->pred16x16[HOR_PRED8x8          ] = ff_pred16x16_horizontal_8_mmx;
@@ -323,7 +325,15 @@ av_cold void ff_h264_pred_init_x86(H264PredContext *h, int codec_id,
                 }
             }
         }
+
+        if(EXTERNAL_AVX2(cpu_flags)){
+            if (codec_id == AV_CODEC_ID_VP8) {
+                printf("%d looooooooooooooool AVXXXXXXX\n",codec_id);
+                h->pred16x16[PLANE_PRED8x8    ] = ff_pred16x16_tm_vp8_8_avx2;
+            }
+        }
     } else if (bit_depth == 10) {
+
         if (EXTERNAL_MMXEXT(cpu_flags)) {
             h->pred4x4[DC_PRED             ] = ff_pred4x4_dc_10_mmxext;
             h->pred4x4[HOR_UP_PRED         ] = ff_pred4x4_horizontal_up_10_mmxext;
