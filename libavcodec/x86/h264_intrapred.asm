@@ -270,50 +270,50 @@ cglobal pred16x16_tm_vp8_8, 2,6,6
 
 INIT_YMM avx2
 cglobal pred16x16_tm_vp8_8, 2,9,5
-    lea         r2, [r0+r1*2]
-    sub         r0, r1
-    sub         r2, r1
-    vpxor       ymm0, ymm0
-    movdqa      xmm0, [r0]
-    vpmovzxbw   ymm0,xmm0
-    movzx       r3d, byte [r0-1]
-    mov         r4d, 4
+    lea             r2, [r0+r1*2]
+    sub             r0, r1
+    sub             r2, r1
+    vpxor           ymm0, ymm0
+    movdqa          xmm0, [r0]
+    vpmovzxbw       ymm0,xmm0
+    movzx           r3d, byte [r0-1]
+    mov             r4d, 4
 .loop:
-    movzx        r5d, byte [r0+r1*1-1]
-    movzx        r6d, byte [r0+r1*2-1]
-    movzx        r7d, byte [r2+r1*1-1]
-    movzx        r8d, byte [r2+r1*2-1]
-    sub          r5d, r3d
-    sub          r6d, r3d
-    sub          r7d, r3d
-    sub          r8d, r3d
-    movd         xmm1, r5d
-    movd         xmm2, r6d
-    movd         xmm3, r7d
-    movd         xmm4, r8d
-    vpbroadcastw ymm1, xmm1
-    vpbroadcastw ymm2, xmm2
-    vpbroadcastw ymm3, xmm3
-    vpbroadcastw ymm4, xmm4
-    vpaddw       ymm1, ymm0, ymm1
-    vpaddw       ymm2, ymm0, ymm2
-    vpaddw       ymm3, ymm0, ymm3
-    vpaddw       ymm4, ymm0, ymm4
-    vpackuswb    ymm1, ymm1, ymm1
-    vpackuswb    ymm2, ymm2, ymm2
-    vpackuswb    ymm3, ymm3, ymm3
-    vpackuswb    ymm4, ymm4, ymm4
-    vpermq 		 ymm1, ymm1, 216
-    vpermq 		 ymm2, ymm2, 216
-    vpermq 		 ymm3, ymm3, 216
-    vpermq 		 ymm4, ymm4, 216
-    movdqa       [r0+r1*1], xmm1
-    movdqa       [r0+r1*2], xmm2
-    movdqa       [r2+r1*1], xmm3
-    movdqa       [r2+r1*2], xmm4
-    lea          r0, [r0+r1*4]
-    lea          r2, [r2+r1*4]
-    dec          r4d
+    movzx           r5d, byte [r0+r1*1-1]
+    movzx           r6d, byte [r0+r1*2-1]
+    movzx           r7d, byte [r2+r1*1-1]
+    movzx           r8d, byte [r2+r1*2-1]
+    sub             r5d, r3d
+    sub             r6d, r3d
+    sub             r7d, r3d
+    sub             r8d, r3d
+    movd            xmm1, r5d
+    movd            xmm2, r6d
+    movd            xmm3, r7d
+    movd            xmm4, r8d
+    vpbroadcastw    ymm1, xmm1
+    vpbroadcastw    ymm2, xmm2
+    vpbroadcastw    ymm3, xmm3
+    vpbroadcastw    ymm4, xmm4
+    vpaddw          ymm1, ymm0, ymm1
+    vpaddw          ymm2, ymm0, ymm2
+    vpaddw          ymm3, ymm0, ymm3
+    vpaddw          ymm4, ymm0, ymm4
+    vpackuswb       ymm1, ymm1, ymm1
+    vpackuswb       ymm2, ymm2, ymm2
+    vpackuswb       ymm3, ymm3, ymm3
+    vpackuswb       ymm4, ymm4, ymm4
+    vpermq          ymm1, ymm1, 216
+    vpermq 		    ymm2, ymm2, 216
+    vpermq 		    ymm3, ymm3, 216
+    vpermq 		    ymm4, ymm4, 216
+    movdqa          [r0+r1*1], xmm1
+    movdqa          [r0+r1*2], xmm2
+    movdqa          [r2+r1*1], xmm3
+    movdqa          [r2+r1*2], xmm4
+    lea             r0, [r0+r1*4]
+    lea             r2, [r2+r1*4]
+    dec             r4d
     jg .loop
     REP_RET
 
