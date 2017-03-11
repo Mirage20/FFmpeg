@@ -269,13 +269,13 @@ cglobal pred16x16_tm_vp8_8, 2,6,6
     REP_RET
 
 INIT_YMM avx2
-cglobal pred16x16_tm_vp8_8, 2, 6, 5, dst, stride, stride3
+cglobal pred16x16_tm_vp8_8, 2, 6, 5, dst, stride, stride3, iteration
     sub                       dstq, strideq
     pmovzxbw                    m0, [dstq]
     vpbroadcastb               xm1, [r0-1]
     pmovzxbw                    m1, xm1
     psubw                       m0, m1
-    mov                        r5d, 4
+    mov                 iterationd, 4
     lea                   stride3q, [strideq*3]
 .loop:
     vpbroadcastb               xm1, [dstq+strideq*1-1]
@@ -299,7 +299,7 @@ cglobal pred16x16_tm_vp8_8, 2, 6, 5, dst, stride, stride3
     movdqa       [dstq+stride3q*1], xm3
     vextracti128  [dstq+strideq*4], m3, 1
     lea                       dstq, [dstq+strideq*4]
-    dec                        r5d
+    dec                 iterationd
     jg .loop
     REP_RET
 
