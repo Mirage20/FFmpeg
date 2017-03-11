@@ -269,51 +269,63 @@ cglobal pred16x16_tm_vp8_8, 2,6,6
     REP_RET
 
 INIT_YMM avx2
-cglobal pred16x16_tm_vp8_8, 2,9,5
-    lea             r2, [r0+r1*2]
-    sub             r0, r1
-    sub             r2, r1
-    vpxor           ymm0, ymm0
-    movdqa          xmm0, [r0]
-    vpmovzxbw       ymm0,xmm0
-    movzx           r3d, byte [r0-1]
-    mov             r4d, 4
+cglobal pred16x16_tm_vp8_8, 2, 5, 9, dst, stride
+    sub             dstq, strideq
+    pmovzxbw        m0, [dstq]
+    vpbroadcastb    xm1, [r0-1]
+    pmovzxbw        m1, xm1
+    psubw           m0, m1
+    mov             r5d, 2
+    lea             r2, [strideq*3]
+    lea             r3, [r2+strideq*2]
+    lea             r4, [r3+strideq*2]
 .loop:
-    movzx           r5d, byte [r0+r1*1-1]
-    movzx           r6d, byte [r0+r1*2-1]
-    movzx           r7d, byte [r2+r1*1-1]
-    movzx           r8d, byte [r2+r1*2-1]
-    sub             r5d, r3d
-    sub             r6d, r3d
-    sub             r7d, r3d
-    sub             r8d, r3d
-    movd            xmm1, r5d
-    movd            xmm2, r6d
-    movd            xmm3, r7d
-    movd            xmm4, r8d
-    vpbroadcastw    ymm1, xmm1
-    vpbroadcastw    ymm2, xmm2
-    vpbroadcastw    ymm3, xmm3
-    vpbroadcastw    ymm4, xmm4
-    vpaddw          ymm1, ymm0, ymm1
-    vpaddw          ymm2, ymm0, ymm2
-    vpaddw          ymm3, ymm0, ymm3
-    vpaddw          ymm4, ymm0, ymm4
-    vpackuswb       ymm1, ymm1, ymm1
-    vpackuswb       ymm2, ymm2, ymm2
-    vpackuswb       ymm3, ymm3, ymm3
-    vpackuswb       ymm4, ymm4, ymm4
-    vpermq          ymm1, ymm1, 216
-    vpermq 	        ymm2, ymm2, 216
-    vpermq 	        ymm3, ymm3, 216
-    vpermq 	        ymm4, ymm4, 216
-    movdqa          [r0+r1*1], xmm1
-    movdqa          [r0+r1*2], xmm2
-    movdqa          [r2+r1*1], xmm3
-    movdqa          [r2+r1*2], xmm4
-    lea             r0, [r0+r1*4]
-    lea             r2, [r2+r1*4]
-    dec             r4d
+    vpbroadcastb    xm1, [dstq+strideq*1-1]
+    vpbroadcastb    xm2, [dstq+strideq*2-1]
+    vpbroadcastb    xm3, [dstq+r2-1]
+    vpbroadcastb    xm4, [dstq+strideq*4-1]
+    vpbroadcastb    xm5, [dstq+r3-1]
+    vpbroadcastb    xm6, [dstq+r2*2-1]
+    vpbroadcastb    xm7, [dstq+r4-1]
+    vpbroadcastb    xm8, [dstq+strideq*8-1]
+    pmovzxbw        m1, xm1
+    pmovzxbw        m2, xm2
+    pmovzxbw        m3, xm3
+    pmovzxbw        m4, xm4
+    pmovzxbw        m5, xm5
+    pmovzxbw        m6, xm6
+    pmovzxbw        m7, xm7
+    pmovzxbw        m8, xm8
+    paddw           m1, m0, m1
+    paddw           m2, m0, m2
+    paddw           m3, m0, m3
+    paddw           m4, m0, m4
+    paddw           m5, m0, m5
+    paddw           m6, m0, m6
+    paddw           m7, m0, m7
+    paddw           m8, m0, m8
+    vpackuswb       m1, m1, m2
+    vpackuswb       m3, m3, m4
+    vpackuswb       m5, m5, m6
+    vpackuswb       m7, m7, m8
+    vpermq          m1, m1, q3120
+    vpermq          m3, m3, q3120
+    vpermq          m5, m5, q3120
+    vpermq          m7, m7, q3120
+    movdqa          [dstq+strideq*1], xm1
+    movdqa          [dstq+r2*1], xm3
+    movdqa          [dstq+r3*1], xm5
+    movdqa          [dstq+r4*1], xm7
+    vextracti128    xm2, m1, 1
+    vextracti128    xm4, m3, 1
+    vextracti128    xm6, m5, 1
+    vextracti128    xm8, m7, 1
+    movdqa          [dstq+strideq*2], xm2
+    movdqa          [dstq+strideq*4], xm4
+    movdqa          [dstq+r2*2], xm6
+    movdqa          [dstq+strideq*8], xm8
+    lea             dstq, [dstq+strideq*8]
+    dec             r5d
     jg .loop
     REP_RET
 
