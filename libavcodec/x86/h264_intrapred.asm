@@ -269,58 +269,36 @@ cglobal pred16x16_tm_vp8_8, 2,6,6
     REP_RET
 
 INIT_YMM avx2
-cglobal pred16x16_tm_vp8_8, 2, 5, 9, dst, stride, stride3, stride5, stride7
+cglobal pred16x16_tm_vp8_8, 2, 8, 8, dst, stride, stride3
     sub                       dstq, strideq
     pmovzxbw                    m0, [dstq]
     vpbroadcastb               xm1, [r0-1]
     pmovzxbw                    m1, xm1
     psubw                       m0, m1
-    mov                        r5d, 2
+    mov                        r5d, 4
     lea                   stride3q, [strideq*3]
-    lea                   stride5q, [stride3q+strideq*2]
-    lea                   stride7q, [stride5q+strideq*2]
 .loop:
     vpbroadcastb               xm1, [dstq+strideq*1-1]
     vpbroadcastb               xm2, [dstq+strideq*2-1]
     vpbroadcastb               xm3, [dstq+stride3q-1]
     vpbroadcastb               xm4, [dstq+strideq*4-1]
-    vpbroadcastb               xm5, [dstq+stride5q-1]
-    vpbroadcastb               xm6, [dstq+stride3q*2-1]
-    vpbroadcastb               xm7, [dstq+stride7q-1]
-    vpbroadcastb               xm8, [dstq+strideq*8-1]
     pmovzxbw                    m1, xm1
     pmovzxbw                    m2, xm2
     pmovzxbw                    m3, xm3
     pmovzxbw                    m4, xm4
-    pmovzxbw                    m5, xm5
-    pmovzxbw                    m6, xm6
-    pmovzxbw                    m7, xm7
-    pmovzxbw                    m8, xm8
     paddw                       m1, m0
     paddw                       m2, m0
     paddw                       m3, m0
     paddw                       m4, m0
-    paddw                       m5, m0
-    paddw                       m6, m0
-    paddw                       m7, m0
-    paddw                       m8, m0
     vpackuswb                   m1, m1, m2
     vpackuswb                   m3, m3, m4
-    vpackuswb                   m5, m5, m6
-    vpackuswb                   m7, m7, m8
     vpermq                      m1, m1, q3120
     vpermq                      m3, m3, q3120
-    vpermq                      m5, m5, q3120
-    vpermq                      m7, m7, q3120
     movdqa        [dstq+strideq*1], xm1
     vextracti128  [dstq+strideq*2], m1, 1
     movdqa       [dstq+stride3q*1], xm3
     vextracti128  [dstq+strideq*4], m3, 1
-    movdqa       [dstq+stride5q*1], xm5
-    vextracti128 [dstq+stride3q*2], m5, 1
-    movdqa       [dstq+stride7q*1], xm7
-    vextracti128  [dstq+strideq*8], m7, 1
-    lea                       dstq, [dstq+strideq*8]
+    lea                       dstq, [dstq+strideq*4]
     dec                        r5d
     jg .loop
     REP_RET
