@@ -269,7 +269,7 @@ cglobal pred16x16_tm_vp8_8, 2,6,6
     REP_RET
 
 INIT_YMM avx2
-cglobal pred16x16_tm_vp8_8, 2, 8, 8, dst, stride, stride3
+cglobal pred16x16_tm_vp8_8, 2, 6, 5, dst, stride, stride3
     sub                       dstq, strideq
     pmovzxbw                    m0, [dstq]
     vpbroadcastb               xm1, [r0-1]
