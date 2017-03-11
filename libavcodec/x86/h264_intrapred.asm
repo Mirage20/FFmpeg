@@ -312,17 +312,17 @@ cglobal pred16x16_tm_vp8_8, 2, 5, 9, dst, stride
     vpermq          m3, m3, q3120
     vpermq          m5, m5, q3120
     vpermq          m7, m7, q3120
-    movdqa          [dstq+strideq*1], xm1
-    movdqa          [dstq+r2*1], xm3
-    movdqa          [dstq+r3*1], xm5
-    movdqa          [dstq+r4*1], xm7
     vextracti128    xm2, m1, 1
     vextracti128    xm4, m3, 1
     vextracti128    xm6, m5, 1
     vextracti128    xm8, m7, 1
+    movdqa          [dstq+strideq*1], xm1
     movdqa          [dstq+strideq*2], xm2
+    movdqa          [dstq+r2*1], xm3
     movdqa          [dstq+strideq*4], xm4
+    movdqa          [dstq+r3*1], xm5
     movdqa          [dstq+r2*2], xm6
+    movdqa          [dstq+r4*1], xm7
     movdqa          [dstq+strideq*8], xm8
     lea             dstq, [dstq+strideq*8]
     dec             r5d
